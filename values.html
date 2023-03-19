@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Core Values Selector</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Core Values Selector</h1>
+      <p>Please select 15 core values from the list below:</p>
+      <form id="value-select">
+        <ul id="value-list">
+          <!-- List of core values will be generated here -->
+        </ul>
+        <button type="submit">Next</button>
+      </form>
+    </div>
+    <script>
+      // List of 50 core values
+      const coreValues = [
+        'Achievement',
+        'Adventure',
+        'Authenticity',
+        'Balance',
+        'Beauty',
+        'Boldness',
+        'Compassion',
+        'Connection',
+        'Creativity',
+        'Curiosity',
+        'Determination',
+        'Fairness',
+        'Faith',
+        'Fame',
+        'Friendship',
+        'Fun',
+        'Generosity',
+        'Gratitude',
+        'Growth',
+        'Happiness',
+        'Health',
+        'Honesty',
+        'Humility',
+        'Independence',
+        'Inner Harmony',
+        'Justice',
+        'Kindness',
+        'Knowledge',
+        'Leadership',
+        'Learning',
+        'Love',
+        'Loyalty',
+        'Meaningful Work',
+        'Openness',
+        'Optimism',
+        'Peace',
+        'Pleasure',
+        'Power',
+        'Recognition',
+        'Religion',
+        'Reputation',
+        'Respect',
+        'Responsibility',
+        'Security',
+        'Self-Respect',
+        'Service',
+        'Spirituality',
+        'Stability',
+        'Success',
+        'Status',
+        'Trustworthiness',
+        'Wealth',
+        'Wisdom'
+      ];
+
+      // Get reference to DOM elements
+      const valueList = document.getElementById('value-list');
+      const valueSelectForm = document.getElementById('value-select');
+
+      // Generate list of core values in block format
+      coreValues.forEach(function(value) {
+        const liElem = document.createElement('li');
+        const inputElem = document.createElement('input');
+        inputElem.type = 'checkbox';
+        inputElem.name = 'value';
+        inputElem.value = value;
+        liElem.appendChild(inputElem);
+        liElem.appendChild(document.createTextNode(value));
+        valueList.appendChild(liElem);
+      });
+
+      // Event listener for form submission
+      valueSelectForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const selectedValues = [];
+        const valueInputs = document.getElementsByName('value');
+        valueInputs.forEach(function(input) {
+          if (input.checked) {
+            selectedValues.push(input.value);
+          }
+        });
+        if (selectedValues.length !== 15) {
+          alert('Please select exactly 15 core values.');
+          return;
+        }
+        // Move to next screen
+        displaySelectedValues(selectedValues);
+      });
+
+      // Function to display selected values in bubbles
+      function displaySelectedValues(selectedValues) {
+        const appElem = document.getElementById('app');
+        appElem.innerHTML = `
+          <h1>Core Values Selector</h1>
+          <p>You have selected the following values:</p>
+          <div id="bubble-list">
+            <!-- Selected values will be displayed as bubbles here -->
+          </div>
+          <button id="remove-values-btn">Remove Values</button>
+          <button id="next-btn">Next</button>
+        `;
+        const bubbleList = document.getElementById('bubble-list');
+        selectedValues.forEach(function(value) {
+          const bubbleElem = document.createElement('div');
+          bubbleElem.classList.add('bubble');
+          bubbleElem.textContent = value;
+          bubbleList.appendChild(bubbleElem);
+        });
+        // Event listener for removing values
+        document.getElementById('remove-values-btn').addEventListener('click', function(event) {
+          event.preventDefault();
+          bubbleList.innerHTML = '';
+          selectedValues = [];
+          coreValues.forEach(function(value) {
+            const liElem = document.createElement('li');
+            const inputElem = document.createElement('input');
+            inputElem.type = 'checkbox';
+            inputElem.name = 'value';
+            inputElem.value = value;
+            liElem.appendChild(inputElem);
+            liElem.appendChild(document.createTextNode(value));
+            valueList.appendChild(liElem);
+          });
+        });
+        // Event listener for moving to next screen
+        document.getElementById('next-btn').addEventListener('click', function(event) {
+          event.preventDefault();
+          if (selectedValues.length < 5) {
+            alert('Please select at least 5 values.');
+            return;
+          }
+          // Move to next screen
+          displayFinalScreen(selectedValues);
+        });
+      }
+
+      // Function to display final screen with selected values
+      function displayFinalScreen(selectedValues) {
+        const appElem = document.getElementById('app');
+        appElem.innerHTML = `
+          <h1>Core Values Selector</h1>
+          <p>Your final list of core values is:</p>
+          <div id="bubble-list">
+            <!-- Selected values will be displayed as bubbles here -->
+          </div>
+          <button id="print-btn">Print</button>
+        `;
+        const bubbleList = document.getElementById('bubble-list');
+        selectedValues.forEach(function(value) {
+          const bubbleElem = document.createElement('div');
+          bubbleElem.classList.add('bubble');
+          bubbleElem.textContent = value;
+          bubbleList.appendChild(bubbleElem);
+        });
+        // Event listener for printing values (opens a new window)
+        document.getElementById('print-btn').addEventListener('click', function(event) {
+          event.preventDefault();
+          const printWindow = window.open('', 'Print', 'toolbar=0,location=0,menubar=0');
+          printWindow.document.write(`
+            <html>
+              <head>
+                <title>Core Values</title>
+              </head>
+              <body>
+                <h1>Your Core Values</h1>
+                <ul>
+                  ${selectedValues.map(value => `<li>${value}</li>`).join('')}
+                </ul>
+              </body>
+            </html>
+          `);
+          printWindow.document.close();
+          printWindow.print();
+        });
+      }
+    </script>
+    <style>
+      .bubble {
+        display: flex;
+        padding: 0.5em;
+        border-radius: 1em;
+        background-color: #eee;
+        margin: 0.5em;
+      }
+    </style>
+  </body>
+</html>
